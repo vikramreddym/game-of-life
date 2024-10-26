@@ -118,7 +118,4 @@ public class GameController {
         return randomGenerator;
     }
 
-    private int getNumber() {
-        return 0;
-    }
 }

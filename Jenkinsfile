@@ -2,9 +2,9 @@ node('JDK8') {
     env.JAVA_HOME = '/usr/lib/jvm/java-8-openjdk-amd64'
     env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
 
-    tools {
-        maven '3.8.4'
-    }
+    def mvnHome = tool name: 'Maven 3.8.4', type: 'maven'
+    env.PATH = "${mvnHome}/bin:${env.PATH}"
+
     stage('SourceCode') {
         git branch: 'scripted-declarative', url: 'https://github.com/vikramreddym/game-of-life.git'
     }

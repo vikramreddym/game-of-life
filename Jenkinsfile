@@ -1,19 +1,28 @@
-node('JDK8') {
-    env.JAVA_HOME = "${tool 'JDK8'}"
-    env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
+pipeline {
+    agent {label 'JDK8'}
+    tools {
+        jdk 'JDK8'
+        maven '3.8.4'
 
-    def mvnHome = tool name: '3.8.4', type: 'maven'
-    env.PATH = "${mvnHome}/bin:${env.PATH}"
+    }
+    stages{
+        stage('SourceCode') {
+            steps {
+                git branch: 'scripted-declarative', url: 'https://github.com/vikramreddym/game-of-life.git'
+            }
+        }
 
-    stage('SourceCode') {
-        git branch: 'scripted-declarative', url: 'https://github.com/vikramreddym/game-of-life.git'
-    }
-    stage('Build the code'){
-        
-        sh 'mvn clean package'
-    }
-    stage('Archiving artifacts & Junit test results') {
-        junit stdioRetention: '', testResults: 'gameoflife-web/target/surefire-reports/*.xml'
-        archiveArtifacts artifacts: '**/*.war', followSymlinks: false
+        stage('Build the code'){
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+
+        stage('Archiving artifacts & Junit test results') {
+            steps {
+                junit stdioRetention: '', testResults: '**/surefire-reports/*.xml'
+                archiveArtifacts artifacts: '**/*.war', followSymlinks: false
+            }
+        }
     }
 }

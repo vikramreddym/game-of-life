@@ -1,5 +1,5 @@
 node('JDK8') {
-    env.JAVA_HOME = '/usr/lib/jvm/java-8-openjdk-amd64'
+    env.JAVA_HOME = "${tool 'JDK8'}"
     env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
 
     def mvnHome = tool name: '3.8.4', type: 'maven'
@@ -13,7 +13,7 @@ node('JDK8') {
         sh 'mvn clean package'
     }
     stage('Archiving artifacts & Junit test results') {
-        junit stdioRetention: '', testResults: 'target/surefire-reports/*.xml'
+        junit stdioRetention: '', testResults: 'gameoflife-web/target/surefire-reports/*.xml'
         archiveArtifacts artifacts: '**/*.war', followSymlinks: false
     }
 }
